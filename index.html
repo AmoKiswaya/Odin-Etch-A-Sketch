@@ -5,11 +5,18 @@
         <meta name="viewport" content="width=device-width, initial-scale=1"> 
         <title>Etch A Sketch</title>
         <link rel="stylesheet" href="styles.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
     </head>
     <body>
+        <div class="top-container">
+            <span id="grid-toggle" class="material-symbols-outlined">grid_on</span>
+            <!-- <span class="material-symbols-outlined">ink_eraser</span>
+            <span class="material-symbols-outlined">stylus</span>
+            <span class="material-symbols-outlined">palette</span> -->
+        </div>
         <div id="sketch-area" class="container"></div>
 
-        <div id="slider-container">
+        <div id="container">
             <input type="range" min="1" max="100" value="16" class="slider" id="slider">
             <p id="slider-value"></p>
         </div>
