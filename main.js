@@ -3,7 +3,6 @@ const accentColor = getComputedStyle(document.body).getPropertyValue("--accent-c
 const inactiveColor = getComputedStyle(document.body).getPropertyValue("--inactive-color");
 
 
-const container = document.querySelector(".container");
 const sketchArea = document.querySelector("#sketch-area");
 const slider = document.querySelector("#slider");
 const sliderValue = document.querySelector("#slider-value");
@@ -13,23 +12,35 @@ const gridToggle = document.querySelector("#grid-toggle");
 let squaresPerSide = 16;
 let gridVisible = false;
 
+let isDrawing = false;
+
 function toggleGrid() {
     gridVisible = gridVisible ? false : true;
     gridToggle.style.color = gridVisible ? accentColor : inactiveColor;
 
-    removeGridCells();
-    createGridCells();
+    removeGridSquares();
+    createGridSquares();
 }
 
-function setBackgroundColor() {
-    this.style.backgroundColor = "black";
+function setBackgroundColor(e) {
+    if (e.type === "mousedown") {
+        isDrawing = true;
+        e.target.style.backgroundColor = "black";
+    }
+    else if (e.type === "mouseover" && isDrawing) {
+        e.target.style.backgroundColor = "black";
+    }
+    else isDrawing = false;
 }
 
-function createGridCells() {
+function createGridSquares() {
     const numberOfSquares = (squaresPerSide * squaresPerSide);
 
     for (let i = 0; i < numberOfSquares; i++ ) {
         const gridCell = document.createElement("div");
+
+
+        let widthOrHeight = 0;
 
         if (gridVisible) {
             widthOrHeight = `${(parseInt(gridWidth) / squaresPerSide) - 2}px`;
@@ -40,14 +51,18 @@ function createGridCells() {
         }
 
         gridCell.style.width = gridCell.style.height = widthOrHeight; 
-        gridCell.addEventListener("mouseover", setBackgroundColor);
+
+        gridCell.addEventListener("mousedown", (e) => setBackgroundColor(e));
+        gridCell.addEventListener("mouseover", (e) => setBackgroundColor(e));
+        gridCell.addEventListener("mouseup", (e) => setBackgroundColor(e));
+        gridCell.addEventListener("dragstart", (e) => e.preventDefault());
 
         sketchArea.appendChild(gridCell);
 
     } 
 }
 
-function removeGridCells() {
+function removeGridSquares() {
     while (sketchArea.firstChild) {
         sketchArea.removeChild(sketchArea.firstChild);
     }
@@ -57,10 +72,10 @@ slider.oninput = function () {
     squaresPerSide = this.value;
 
     sliderValue.textContent = `${this.value} x ${this.value} (Resolution)`;
-    removeGridCells();
-    createGridCells();
+    removeGridSquares();
+    createGridSquares();
 }
 
 gridToggle.addEventListener("click", toggleGrid);
 
-createGridCells();
+createGridSquares();
